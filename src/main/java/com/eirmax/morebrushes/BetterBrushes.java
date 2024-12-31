@@ -22,8 +22,8 @@ public class BetterBrushes {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
 
 
-    public BetterBrushes() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public BetterBrushes(FMLJavaModLoadingContext context) {
+        IEventBus modEventBus = context.getModEventBus();
         ModItems.register(modEventBus);
         CREATIVE_MODE_TABS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
