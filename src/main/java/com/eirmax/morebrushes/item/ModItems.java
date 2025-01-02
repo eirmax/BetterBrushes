@@ -6,6 +6,7 @@ import com.eirmax.morebrushes.item.custom.brush.GoldBrush;
 import com.eirmax.morebrushes.item.custom.brush.IronBrush;
 import com.eirmax.morebrushes.item.custom.brush.NetheriteBrush;
 import net.minecraft.world.item.Item;
+
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,15 +18,15 @@ public class ModItems {
 
 
     public static final RegistryObject<Item> GOLD_BRUSH = ITEMS.register("gold_brush",
-            () -> new GoldBrush(new Item.Properties().durability(54)));
+            () -> new GoldBrush(new Item.Properties().durability(54).setId(ITEMS.key("gold_brush"))));
     public static final RegistryObject<Item> IRON_BRUSH = ITEMS.register("iron_brush",
-            () -> new IronBrush(new Item.Properties().durability(250)));
+            () -> new IronBrush(new Item.Properties().durability(250).setId(ITEMS.key("iron_brush"))));
     public static final RegistryObject<Item> DIAMOND_BRUSH = ITEMS.register("diamond_brush",
-            () -> new DiamondBrush(new Item.Properties().durability(340)));
+            () -> new DiamondBrush(new Item.Properties().durability(340).setId(ITEMS.key("diamond_brush"))));
     public static final RegistryObject<Item> NETHERITE_BRUSH = ITEMS.register("netherite_brush",
-            () -> new NetheriteBrush(new Item.Properties().durability(500)));
+            () -> new NetheriteBrush(new Item.Properties().durability(500).setId(ITEMS.key("netherite_brush"))));
     public static final RegistryObject<Item> IMPROVED_FEATHER = ITEMS.register("improved_feather",
-            () -> new Item(new Item.Properties()));
+            () -> new Item(new Item.Properties().setId(ITEMS.key("improved_feather"))));
 
 
     public static void register(IEventBus eventBus) {

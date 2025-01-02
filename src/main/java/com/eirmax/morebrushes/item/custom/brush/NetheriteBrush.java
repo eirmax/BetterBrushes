@@ -4,19 +4,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BrushItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -30,13 +33,15 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.HitResult.Type;
 
+
 public class NetheriteBrush extends BrushItem {
     public static final int ANIMATION_DURATION = 10;
     private static final int USE_DURATION = 200;
 
-    public NetheriteBrush(Properties p_41383_) {
-        super(p_41383_);
+    public NetheriteBrush(Properties p_272907_) {
+        super(p_272907_);
     }
+
 
     public InteractionResult useOn(UseOnContext p_272607_) {
         Player $$1 = p_272607_.getPlayer();
@@ -47,8 +52,8 @@ public class NetheriteBrush extends BrushItem {
         return InteractionResult.CONSUME;
     }
 
-    public UseAnim getUseAnimation(ItemStack p_273490_) {
-        return UseAnim.BRUSH;
+    public ItemUseAnimation getUseAnimation(ItemStack p_273490_) {
+        return ItemUseAnimation.BRUSH;
     }
 
     public int getUseDuration(ItemStack p_272765_, LivingEntity p_343510_) {
@@ -80,14 +85,15 @@ public class NetheriteBrush extends BrushItem {
                         }
 
                         p_273467_.playSound($$5, $$11, $$16, SoundSource.BLOCKS);
-                        if (!p_273467_.isClientSide()) {
-                            BlockEntity var18 = p_273467_.getBlockEntity($$11);
-                            if (var18 instanceof BrushableBlockEntity) {
-                                BrushableBlockEntity $$17 = (BrushableBlockEntity)var18;
-                                boolean $$18 = $$17.brush(p_273467_.getGameTime(), $$5, $$8.getDirection());
-                                if ($$18) {
-                                    EquipmentSlot $$19 = p_273316_.equals($$5.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
-                                    p_273316_.hurtAndBreak(1, p_273619_, $$19);
+                        if (p_273467_ instanceof ServerLevel) {
+                            ServerLevel $$17 = (ServerLevel)p_273467_;
+                            BlockEntity var16 = p_273467_.getBlockEntity($$11);
+                            if (var16 instanceof BrushableBlockEntity) {
+                                BrushableBlockEntity $$18 = (BrushableBlockEntity)var16;
+                                boolean $$19 = $$18.brush(p_273467_.getGameTime(), $$17, $$5, $$8.getDirection(), p_273316_);
+                                if ($$19) {
+                                    EquipmentSlot $$20 = p_273316_.equals($$5.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                                    p_273316_.hurtAndBreak(1, $$5, $$20);
                                 }
                             }
                         }
@@ -104,9 +110,7 @@ public class NetheriteBrush extends BrushItem {
     }
 
     private HitResult calculateHitResult(Player p_311819_) {
-        return ProjectileUtil.getHitResultOnViewVector(p_311819_, (p_281111_) -> {
-            return !p_281111_.isSpectator() && p_281111_.isPickable();
-        }, p_311819_.blockInteractionRange());
+        return ProjectileUtil.getHitResultOnViewVector(p_311819_, EntitySelector.CAN_BE_PICKED, p_311819_.blockInteractionRange());
     }
 
     private void spawnDustParticles(Level p_278327_, BlockHitResult p_278272_, BlockState p_278235_, Vec3 p_278337_, HumanoidArm p_285071_) {
@@ -174,3 +178,4 @@ public class NetheriteBrush extends BrushItem {
         }
     }
 }
+
